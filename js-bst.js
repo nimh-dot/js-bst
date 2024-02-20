@@ -40,20 +40,21 @@ class  BSTree {
         }
     }
 
-    search(val, root) {
+    search(val, root = this.root) {
         if(!root) return
-        else if(val < root.data) this.search(val, root.left)
-        else if(val > root.data) this.search(val, root.right)
+        else if(val < root.data) return this.search(val, root.left)
+        else if(val > root.data) return this.search(val, root.right)
         else return true
     }
 
-    getMin(root) {
-        if (!this.root)
+    getMin(root = this.root) {
+        if (!root) return null
         if (root.left === null) return root.data
         else return this.getMin(root.left)
     }
 
-    getMax(root) {
+    getMax(root = this.root) {
+        if (!root) return null
         if (root.right === null) return root.data
         else return this.getMax(root.right)
     }
