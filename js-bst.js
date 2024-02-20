@@ -41,22 +41,57 @@ class  BSTree {
     }
 
     search(val, root = this.root) {
-        if(!root) return
+        if(!root) return null
         else if(val < root.data) return this.search(val, root.left)
         else if(val > root.data) return this.search(val, root.right)
-        else return true
+        else return root
     }
 
     getMin(root = this.root) {
         if (!root) return null
-        if (root.left === null) return root.data
+        if (root.left === null) return root
         else return this.getMin(root.left)
     }
 
     getMax(root = this.root) {
         if (!root) return null
-        if (root.right === null) return root.data
+        if (root.right === null) return root
         else return this.getMax(root.right)
+    }
+
+    remove(val) {
+        let nodeToRemove = this.search(val);
+        if (!nodeToRemove) throw new Error('The value is not in the tree')
+        // case 1: node to remove has two children
+        if (nodeToRemove.left && nodeToRemove.right) {
+            let minRight = this.getMin(nodeToRemove.right)
+            nodeToRemove.data = minRight.data;
+            if (minRight.right) minRight.right.parent = minRight.parent;
+
+            if (minRight.parent.left == minRight) {
+                minRight.parent.left = minRight.right;
+            } else {
+                minRight.parent.right = minRight.right;
+            }
+        }
+        // case 2: node to remove has one child
+        else if (nodeToRemove.left || nodeToRemove.right) {
+            let child = nodeToRemove.left || nodeToRemove.right;
+            child.parent = nodeToRemove.parent;
+            if (nodeToRemove.parent.left == nodeToRemove) {
+                nodeToRemove.parent.left = child;
+            } else {
+                nodeToRemove.parent.right = child;
+            }
+
+        // case 3: node to remove doesn't have any children
+        } else {
+            if (nodeToRemove.parent.left == nodeToRemove) {
+                nodeToRemove.parent.left = null;
+            } else {
+                nodeToRemove.parent.right = null;
+            }
+        }
     }
 
     clear() {
